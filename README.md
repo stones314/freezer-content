@@ -17,3 +17,7 @@ Poenget er å:
 2. Mulighet for dobbel-filtrering - både velge kategori og velge klassifisering samtidig.
 3. Finne eget ikon (bruke snøfnugget?)
 4. Gi web appen et eget navn (no heiter den React App)
+5. Ta vekk ubrukte filer etc
+6. Rydde kode: no har eg ein del copy paste på tvers av filer, kan/bør gjeres felles. eks
+    1. rad med kategori-ikoner
+    2. rad med klassifiserings-ikoner
