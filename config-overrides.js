@@ -34,29 +34,3 @@ module.exports = function override(config) {
   });
   return config;
 };
-
-/*
-const webpack = require("webpack");
-module.exports = function override(config, env) {
-    console.log('override')
-    let loaders = config.resolve
-    loaders.fallback = {
-        "fs": false,
-        "tls": false,
-        "net": false,
-        "child_process": false,
-        "buffer": require.resolve("buffer"),
-        "path": require.resolve("path-browserify"),
-        "http": require.resolve("stream-http"),
-        "os": require.resolve("os-browserify/browser"),
-        "url": require.resolve("url/"),
-        "assert": require.resolve("assert/"),
-        "https": require.resolve("https-browserify"),
-        "stream": require.resolve("stream-browserify"),
-        "util": require.resolve("util/"),
-        "crypto": require.resolve("crypto-browserify")
-    }
-
-    return config
-}
-*/
