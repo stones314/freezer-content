@@ -10,7 +10,7 @@ export function AddRow(props) {
     const [cat, setCat] = useState(props.cats[0]);
     const [nErr, setNerr] = useState("");
     const [vErr, setVerr] = useState("");
-    const [spes, setSpes] = useState([ false, false, false, false ]);
+    const [spes, setSpes] = useState([0, false, false, false]);
 
     function onValChange(newValue) {
         setVal(newValue);
@@ -21,6 +21,26 @@ export function AddRow(props) {
             return;
         }
         setNavn(newValue);
+    }
+
+    function onBasePluss() {
+        if (spes[0] >= 9) return;
+        setSpes([
+            Number(spes[0]) + 1,
+            spes[1],
+            spes[2],
+            spes[3]
+        ]);
+    }
+
+    function onBaseMinus() {
+        if (spes[0] <= 0) return;
+        setSpes([
+            Number(spes[0]) - 1,
+            spes[1],
+            spes[2],
+            spes[3]
+        ]);
     }
 
     function renderCategories() {
@@ -49,8 +69,29 @@ export function AddRow(props) {
         setCat(c);
     }
 
+    function renderBaseVal() {
+        if (spes[0] > 0) {
+            return (
+                <div className='mid row mtb2'>
+                    <div className='brd sqr'>
+                        {spes[0]}
+                    </div>
+                    <div className='mlr3' onClick={() => onBasePluss()}>
+                        <img className="icon" src={IMG["pluss"]} alt="pluss" />
+                    </div>
+                    <div className='mlr3' onClick={() => onBaseMinus()}>
+                        <img className="icon" src={IMG["minus"]} alt="minus" />
+                    </div>
+                </div>
+            );
+        }
+        return (
+            null
+        );
+    }
+
     function renderSpecial() {
-        const a_sel = spes[0] ? " sel" : "";
+        const a_sel = spes[0] > 0 ? " sel" : "";
         const b_sel = spes[1] ? " sel" : "";
         const h_sel = spes[2] ? " sel" : "";
         const r_sel = spes[3] ? " sel" : "";
@@ -65,14 +106,21 @@ export function AddRow(props) {
                     <div className={"f1 brd" + h_sel} onClick={() => onClickSpes(2)}><img className="btn-img" src={IMG["helg"]} alt="helg" /></div>
                     <div className={"f1 brd" + r_sel} onClick={() => onClickSpes(3)}><img className="btn-img" src={IMG["rask"]} alt="rask" /></div>
                 </div>
+                {renderBaseVal()}
             </div>
         )
     }
 
-    function onClickSpes(s){
+    function onClickSpes(s) {
         var newSpes = [];
         for (const [i, x] of spes.entries()) newSpes[i] = x;
-        newSpes[s] = !newSpes[s];
+        if (s === 0) {
+            if (Number(newSpes[s]) === 0) newSpes[s] = "1";
+            else newSpes[s] = "0";
+        }
+        else {
+            newSpes[s] = !newSpes[s];
+        }
         setSpes(newSpes);
     }
 
@@ -86,7 +134,7 @@ export function AddRow(props) {
             setVerr("Må ha antall!");
             return;
         }
-        if(Number(val) < 0){
+        if (Number(val) < 0) {
             setVerr("antall må være større enn 0");
             return;
         }

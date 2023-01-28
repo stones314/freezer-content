@@ -1,4 +1,4 @@
-import { IMG } from './Consts.js';
+import { IMG, isBase } from './Consts.js';
 import { useState } from "react";
 import StringInput from './StringInput.jsx';
 
@@ -16,7 +16,7 @@ export function Row(props) {
     const [nErr, setNerr] = useState("");
     const [vErr, setVerr] = useState("");
     const [spes, setSpes] = useState([
-        props.row.Basisvare === "x",
+        props.row.Basisvare ? Number(props.row.Basisvare) : 0,
         props.row.BrukeOpp === "x",
         props.row.Helgemiddag === "x",
         props.row.Ferdigmiddag === "x"
@@ -51,7 +51,13 @@ export function Row(props) {
     function onClickSpes(s) {
         var newSpes = [];
         for (const [i, x] of spes.entries()) newSpes[i] = x;
-        newSpes[s] = !newSpes[s];
+        if (s === 0) {
+            if (Number(newSpes[s]) === 0) newSpes[s] = 1;
+            else newSpes[s] = 0;
+        }
+        else {
+            newSpes[s] = !newSpes[s];
+        }
         setSpes(newSpes);
         setEdited(true);
     }
@@ -68,6 +74,28 @@ export function Row(props) {
         setEdited(true);
         var v = Number(val);
         setVal(v + 1);
+    }
+
+    function onBasePluss() {
+        if (spes[0] >= 9) return;
+        setEdited(true);
+        setSpes([
+            Number(spes[0]) + 1,
+            spes[1],
+            spes[2],
+            spes[3]
+        ]);
+    }
+
+    function onBaseMinus() {
+        if (spes[0] <= 0) return;
+        setEdited(true);
+        setSpes([
+            Number(spes[0]) - 1,
+            spes[1],
+            spes[2],
+            spes[3]
+        ]);
     }
 
     function renderCategories() {
@@ -104,17 +132,41 @@ export function Row(props) {
         }
         return (
             <div className="row f1" onClick={() => props.onSelect()}>
-                {renderIcon(props.row.Basisvare, "base")}
-                {renderIcon(props.row.BrukeOpp, "bruk")}
-                {renderIcon(props.row.Helgemiddag, "helg")}
-                {renderIcon(props.row.Ferdigmiddag, "rask")}
+                {renderIcon(isBase(props.row.Basisvare), "base")}
+                {renderIcon(props.row.BrukeOpp === "x", "bruk")}
+                {renderIcon(props.row.Helgemiddag === "x", "helg")}
+                {renderIcon(props.row.Ferdigmiddag === "x", "rask")}
             </div>
         )
     }
 
-    function renderIcon(cell, icon) {
-        if (cell !== "x") return (<div className='f1'></div>);
+    function renderIcon(isSet, icon) {
+        if (!isSet) return (<div className='f1'></div>);
         return (<div className='f1'><img className="icon" src={IMG[icon]} alt={icon} /></div>);
+    }
+
+    function renderBaseVal() {
+        if (spes[0] > 0) {
+            return (
+                <div className='mid row'>
+                    <div className='brd sqr'>
+                        {spes[0]}
+                    </div>
+                    <div className='mlr3' onClick={() => onBasePluss()}>
+                        <img className="icon" src={IMG["pluss"]} alt="pluss" />
+                    </div>
+                    <div className='mlr3' onClick={() => onBaseMinus()}>
+                        <img className="icon" src={IMG["minus"]} alt="minus" />
+                    </div>
+                    <div className='mlr3'>
+                        (Basisverdi)
+                    </div>
+                </div>
+            );
+        }
+        return (
+            null
+        );
     }
 
     function renderValue() {
@@ -164,9 +216,9 @@ export function Row(props) {
     function renderExitBtn() {
         return (
             <div className='f1 row'>
-            <div className="f1" onClick={() => props.onSelect()}>
-                X
-            </div>
+                <div className="f1" onClick={() => props.onSelect()}>
+                    X
+                </div>
             </div>
         );
     }
@@ -178,7 +230,7 @@ export function Row(props) {
                 setName(props.row.Navn);
                 setCat(props.row.Kategori);
                 setSpes([
-                    props.row.Basisvare === "x",
+                    props.row.Basisvare ? Number(props.row.Basisvare) : 0,
                     props.row.BrukeOpp === "x",
                     props.row.Helgemiddag === "x",
                     props.row.Ferdigmiddag === "x"
@@ -188,21 +240,25 @@ export function Row(props) {
             return (<div className="f1"></div>);
         }
         return (
-            <div className="mid row f1">
-                {renderCategories()}
-                <div className='f1 add_hp'></div>
-                {renderValue()}
-                <div className="f1" onClick={() => onPlussOne()}><img className="icon" src={IMG["pluss"]} alt="pluss" /></div>
-                <div className="f1" onClick={() => onMinusOne()}><img className="icon" src={IMG["minus"]} alt="minus" /></div>
-                <div className='f1'></div>
-                <div className="f1" onClick={() => props.onSave(name, val, cat, spes)}><img className="icon" src={IMG["save"]} alt="save" /></div>
+            <div className="col">
+                {renderBaseVal()}
+                <div className="mid row f1">
+                    {renderCategories()}
+                    <div className='f1 add_hp'></div>
+                    {renderValue()}
+                    <div className="f1" onClick={() => onPlussOne()}><img className="icon" src={IMG["pluss"]} alt="pluss" /></div>
+                    <div className="f1" onClick={() => onMinusOne()}><img className="icon" src={IMG["minus"]} alt="minus" /></div>
+                    <div className='f1'></div>
+                    <div className="f1" onClick={() => props.onSave(name, val, cat, spes)}><img className="icon" src={IMG["save"]} alt="save" /></div>
+                </div>
             </div>
 
         );
     }
 
     function renderBaseRow() {
-        const buy = (props.row.Basisvare === "x" && Number(props.row.Antall) < 1) ? " buy" : ""
+        const baseLim = props.row.Basisvare !== "" ? Number(props.row.Basisvare) : 0;
+        const buy = (Number(props.row.Antall) < baseLim) ? " buy" : ""
 
         if (isSelected()) {
             return (

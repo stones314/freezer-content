@@ -1,4 +1,6 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
+import { isBase } from './Consts.js';
+
 
 const PAGE_NAME = "Fryser";
 export const COL_ID = {
@@ -41,15 +43,11 @@ export class SheetApi {
                 private_key: process.env.REACT_APP_API_KEY.replace(/\\n/g, '\n'),
             });
 
-            console.log("dbg-01");
-
             // loads document properties and worksheets
             await this.doc.loadInfo();
 
             this.sPage = this.doc.sheetsByTitle[PAGE_NAME];
             this.rows = await this.sPage.getRows();
-
-            console.log("dbg-02 = " + this.sPage.rowCount);
 
             await this.sPage.loadCells({ startRowIndex: 1 });
 
@@ -63,7 +61,6 @@ export class SheetApi {
     }
 
     getRows() {
-        console.log("yay - " + this.rows.length);
         return this.rows;
     }
 
@@ -71,7 +68,7 @@ export class SheetApi {
         this.rows[row_id].Navn = name;
         this.rows[row_id].Antall = val;
         this.rows[row_id].Kategori = cat;
-        this.rows[row_id].Basisvare = extra[0] ? "x": "";
+        this.rows[row_id].Basisvare = Number(extra[0]) > 0 ? extra[0].toString() : "";
         this.rows[row_id].BrukeOpp = extra[1] ? "x": "";
         this.rows[row_id].Helgemiddag = extra[2] ? "x": "";
         this.rows[row_id].Ferdigmiddag = extra[3] ? "x": "";
@@ -79,7 +76,7 @@ export class SheetApi {
 
     async saveChanges(row_id, onSaved) {
         try {
-            if(Number(this.rows[row_id].Antall) <= 0 && !this.rows[row_id].Basisvare !== "x")
+            if(Number(this.rows[row_id].Antall) <= 0 && !isBase(this.rows[row_id].Basisvare))
             {
                 await this.rows[row_id].delete();
                 this.rows = await this.sPage.getRows();
@@ -97,8 +94,7 @@ export class SheetApi {
     }
 
     /**
-     * 
-     * @returns array of row-objects, where the keys are the headers used in spreadsheet :)
+     * Collumns:
      * 0    Kategori
      * 1	Navn
      * 2	Antall
@@ -110,12 +106,12 @@ export class SheetApi {
      */
     async addNewRow(navn, antall, cat, extra, onSaved) {
         try {
-            const larryRow = await this.sPage.addRow({
+            await this.sPage.addRow({
                 Kategori: cat,
                 Navn: navn,
                 Antall: antall,
                 Endringer: "",
-                Basisvare: extra[0] ? "x" : "",
+                Basisvare: Number(extra[0]) > 0 ? extra[0].toString() : "",
                 Ferdigmiddag: extra[3] ? "x" : "",
                 BrukeOpp: extra[1] ? "x" : "",
                 Helgemiddag: extra[2] ? "x" : ""

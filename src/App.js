@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { SheetApi } from './SheetApiClass.js'
 import { Filter } from './Filter.js'
 import { Row } from './Row.js'
-import { IMG } from './Consts.js';
+import { IMG, isBase } from './Consts.js';
 import { AddRow } from './AddRow.js';
 import './App.css';
 
@@ -48,7 +48,7 @@ function App() {
 
   function isFiltered(row) {
     if (filterKat !== "" && row.Kategori !== filterKat) return true;//eliminated by category filter!
-    if (spes === BASE && row.Basisvare !== "x") return true;//eliminated by Basisvare filter
+    if (spes === BASE && !isBase(row.Basisvare)) return true;//eliminated by Basisvare filter
     if (spes === BRUK && row.BrukeOpp !== "x") return true;//eliminated by BrukOpp filter
     if (spes === RASK && row.Ferdigmiddag !== "x") return true;//eliminated by Ferdigmiddag filter
     if (spes === HELG && row.Helgemiddag !== "x") return true;//eliminated by Helgemiddag filter
@@ -98,7 +98,6 @@ function App() {
     else {
       setFilterKat(cat);
     }
-    setSpes(NO_SPES);
   }
 
   function onClickSpes(s) {
@@ -112,7 +111,6 @@ function App() {
     else {
       setSpes(s);
     }
-    setFilterKat("");
   }
 
   function onSave(row_id, name, value, cat, extra) {

@@ -113,6 +113,11 @@
   margin-left: 1vmin;
   margin-right: 1vmin;
 }
+.mtb2 {
+  margin-top: 1vmin;
+  margin-bottom: 1vmin;
+}
+
 
 .sel {
   background-color: aquamarine;
@@ -129,6 +134,11 @@
 .kat-opt {
   padding-left: 2px;
   padding-right: 2px;
+}
+
+.sqr {
+  width: min(5vmin, 25px);
+  height: min(5vmin, 25px);
 }
 
 .btn-img {

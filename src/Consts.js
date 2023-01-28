@@ -15,3 +15,10 @@ export const IMG = {
     "save" : "https://rygg-gaard.no/frys/img/ok.png",
     
 }
+
+export function isBase(cell){
+    if(!cell) return false;
+    if(cell === "") return false;
+    if(Number(cell) <= 0) return false;
+    return true;
+}
