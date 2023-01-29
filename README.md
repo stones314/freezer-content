@@ -12,7 +12,5 @@ Poenget er å:
 
 # TODOS:
 
-1. Bakgrunnsfarge i logo-snøfnugg
-2. Rydde kode: no har eg ein del copy paste på tvers av filer, kan/bør gjeres felles. eks
-    1. rad med kategori-ikoner
-    2. rad med klassifiserings-ikoner
+1. Rydde kode: no har eg ein del copy paste på tvers av filer, kan/bør gjeres felles. eks
+    1. legge til ny rad og editere eksisterende rad er to forskjellige filer som har veldig mykje lik kode!
