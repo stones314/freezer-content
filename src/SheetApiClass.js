@@ -1,5 +1,5 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
-import { isBase } from './Consts.js';
+import { isBase, getDateTime } from './Consts.js';
 
 
 const PAGE_NAME = "Fryser";
@@ -22,22 +22,15 @@ export class SheetApi {
     }
 
     /**
+     * Call this function in a useEffect to load data async.
      * 
-     * @returns array of row-objects, where the keys are the headers used in spreadsheet :)
-     * 0    Kategori
-     * 1	Navn
-     * 2	Antall
-     * 3	Endringer
-     * 4	Basisvare
-     * 5	Ferdigmiddag
-     * 6	BrukesOpp
-     * 7	Helgemiddag
+     * @param {*} onDataLoaded function to be called when data is loaded, taking no parameters
+     * @returns 
      */
     async loadSheetData(onDataLoaded) {
         var error = "";
         try {
 
-            //await doc.useApiKey("AIzaSyDDBUDDkWmwrWEcS8kz2dpPVTg6bRZGMIA");
             await this.doc.useServiceAccountAuth({
                 client_email: process.env.REACT_APP_CLIENT_EMAIL,
                 private_key: process.env.REACT_APP_API_KEY.replace(/\\n/g, '\n'),
@@ -49,8 +42,6 @@ export class SheetApi {
             this.sPage = this.doc.sheetsByTitle[PAGE_NAME];
             this.rows = await this.sPage.getRows();
 
-            await this.sPage.loadCells({ startRowIndex: 1 });
-
             onDataLoaded();
 
         } catch (e) {
@@ -60,24 +51,34 @@ export class SheetApi {
         return error;
     }
 
+    /**
+     * 
+     * @returns array of row-objects, where the keys are the headers used in spreadsheet :)
+     * 0    Kategori
+     * 1	Navn
+     * 2	Antall
+     * 3	Endringer
+     * 4	Basisvare
+     * 5	Ferdigmiddag
+     * 6	BrukesOpp
+     * 7	Helgemiddag
+     */
     getRows() {
         return this.rows;
     }
 
-    setNewVal(row_id, name, val, cat, extra) {
+    async saveNewVal(row_id, name, val, cat, extra, onSaved) {
         this.rows[row_id].Navn = name;
         this.rows[row_id].Antall = val;
         this.rows[row_id].Kategori = cat;
+        this.rows[row_id].Endringer = getDateTime();
         this.rows[row_id].Basisvare = Number(extra[0]) > 0 ? extra[0].toString() : "";
-        this.rows[row_id].BrukeOpp = extra[1] ? "x": "";
-        this.rows[row_id].Helgemiddag = extra[2] ? "x": "";
-        this.rows[row_id].Ferdigmiddag = extra[3] ? "x": "";
-    }
+        this.rows[row_id].BrukeOpp = extra[1] ? "x" : "";
+        this.rows[row_id].Helgemiddag = extra[2] ? "x" : "";
+        this.rows[row_id].Ferdigmiddag = extra[3] ? "x" : "";
 
-    async saveChanges(row_id, onSaved) {
         try {
-            if(Number(this.rows[row_id].Antall) <= 0 && !isBase(this.rows[row_id].Basisvare))
-            {
+            if (Number(this.rows[row_id].Antall) <= 0 && !isBase(this.rows[row_id].Basisvare)) {
                 await this.rows[row_id].delete();
                 this.rows = await this.sPage.getRows();
                 onSaved("delete");
@@ -110,7 +111,7 @@ export class SheetApi {
                 Kategori: cat,
                 Navn: navn,
                 Antall: antall,
-                Endringer: "",
+                Endringer: getDateTime(),
                 Basisvare: Number(extra[0]) > 0 ? extra[0].toString() : "",
                 Ferdigmiddag: extra[3] ? "x" : "",
                 BrukeOpp: extra[1] ? "x" : "",

@@ -115,8 +115,7 @@ function App() {
 
   function onSave(row_id, name, value, cat, extra) {
     setPageState(SAVING);
-    sheetApi.current.setNewVal(row_id, name, value, cat, extra);
-    sheetApi.current.saveChanges(row_id, (msg) => {
+    sheetApi.current.saveNewVal(row_id, name, value, cat, extra, (msg) => {
       if (msg === "save") {
         onDataLoaded();
         setErrMsg("");
