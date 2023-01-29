@@ -115,8 +115,8 @@ export function AddRow(props) {
         var newSpes = [];
         for (const [i, x] of spes.entries()) newSpes[i] = x;
         if (s === 0) {
-            if (Number(newSpes[s]) === 0) newSpes[s] = "1";
-            else newSpes[s] = "0";
+            if (Number(newSpes[s]) === 0) newSpes[s] = 1;
+            else newSpes[s] = 0;
         }
         else {
             newSpes[s] = !newSpes[s];
