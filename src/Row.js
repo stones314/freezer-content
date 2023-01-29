@@ -172,7 +172,7 @@ export function Row(props) {
     function renderValue() {
         if (isSelected()) {
             return (
-                <div className="f3">
+                <div className="f2">
                     <StringInput
                         description={""}
                         type="number"
@@ -207,7 +207,7 @@ export function Row(props) {
             );
         }
         return (
-            <div className="f3" onClick={() => props.onSelect()}>
+            <div className="f3 txt-left" onClick={() => props.onSelect()}>
                 {name}
             </div>
         );
@@ -244,11 +244,10 @@ export function Row(props) {
                 {renderBaseVal()}
                 <div className="mid row f1">
                     {renderCategories()}
-                    <div className='f1 add_hp'></div>
+                    <div className='f3 add_hp txt-right'></div>
                     {renderValue()}
                     <div className="f1" onClick={() => onPlussOne()}><img className="icon" src={IMG["pluss"]} alt="pluss" /></div>
                     <div className="f1" onClick={() => onMinusOne()}><img className="icon" src={IMG["minus"]} alt="minus" /></div>
-                    <div className='f1'></div>
                     <div className="f1" onClick={() => props.onSave(name, val, cat, spes)}><img className="icon" src={IMG["save"]} alt="save" /></div>
                 </div>
             </div>

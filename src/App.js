@@ -187,7 +187,7 @@ function App() {
   }
 
   return (
-    <div className="narrow col center">
+    <div className="narrow col center trans-mid">
       {renderErrorMsg()}
       <Filter
         kat={filterKat}

@@ -48,7 +48,7 @@
 
 .narrow {
   position: relative;
-  width: min(100vmin, 400px);
+  width: min(100vmin, 500px);
 }
 
 .wide {
@@ -145,12 +145,16 @@
   width: min(10vmin, 50px);
 }
 .icon {
-  width: 15px;
+  width: 20px;
 }
 
 .txt-left {
   text-align: left;
 }
+.txt-right {
+  text-align: right;
+}
+
 
 .items-left {
   position: relative;
@@ -170,7 +174,7 @@ input[type=text],input[type=number],input[type=password] {
 }
 
 .add_hp {
-  height: 30px;
+  height: 35px;
 }
 
 input[type=number]::-webkit-inner-spin-button, 

@@ -24,7 +24,7 @@ export function Filter(props) {
             );
         }
         return (
-            <div className="row">
+            <div className="row mid">
                 {catOpts}
             </div>
         )
@@ -36,7 +36,7 @@ export function Filter(props) {
         const h_sel = props.helg ? " sel" : "";
         const r_sel = props.rask ? " sel" : "";
         return (
-            <div className="row">
+            <div className="row mid">
                 <div className={"f1 brd" + a_sel} onClick={() => props.onClickBase()}><img className="btn-img" src={IMG["base"]} alt="base" /></div>
                 <div className={"f1 brd" + b_sel} onClick={() => props.onClickBruk()}><img className="btn-img" src={IMG["bruk"]} alt="bruk" /></div>
                 <div className={"f1 brd" + h_sel} onClick={() => props.onClickHelg()}><img className="btn-img" src={IMG["helg"]} alt="helg" /></div>
