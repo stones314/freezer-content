@@ -4,6 +4,7 @@ import './App.css';
 export function Filter(props) {
 
     function renderAddRowBtn() {
+        if(!props.mayEdit)return null;
         const bgcol = props.addNew ? " buy" : " sel";
         const sign = props.addNew ? "minus" : "pluss"
         return (

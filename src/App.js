@@ -3,7 +3,9 @@ import { SheetApi } from './SheetApiClass.js'
 import { Filter } from './Filter.js'
 import { Row } from './Row.js'
 import { IMG, isBase } from './Consts.js';
+import StringInput from './StringInput.jsx';
 import { AddRow } from './AddRow.js';
+import Cookies from "universal-cookie";
 import './App.css';
 
 const LOADING = 0;
@@ -17,8 +19,11 @@ const RASK = 3;
 const BASE = 4;
 
 function App() {
-
+  const cookies = new Cookies();
   const [pageState, setPageState] = useState(LOADING);
+  const [pwd, setPwd] = useState(cookies.get("lastPwd") ? cookies.get("lastPwd") : "");
+  const [pwdErr, setPwdErr] = useState("");  
+  const [hasLoggedIn, setHasLoggedIn] = useState(mayEdit());
   const [errMsg, setErrMsg] = useState("");
   const [rows, setRows] = useState([]);
   const [selected, setSelected] = useState(-1);
@@ -44,6 +49,63 @@ function App() {
     }
     setCats(categories);
     setPageState(READY);
+  }
+
+  function mayEdit() {
+    return (pwd === process.env.REACT_APP_EDIT_PWD);
+  }
+
+  function onPwdChange(p) {
+    setPwd(p);
+  }
+  function onLogin(withPwd) {
+    if (!withPwd) {//login only to look, no edit
+      cookies.set("lastPwd", "", { path: "/" });
+      setPwdErr("");
+      setHasLoggedIn(true);
+      return;
+    }
+    //trying to edit, requre correct pwd:
+    if (mayEdit()) {//Correct pwd was entered
+      cookies.set("lastPwd", pwd, { path: "/" });
+      setPwdErr("");
+      setHasLoggedIn(true);
+    }
+    else {//Wrong pwd was entered
+      setPwdErr("Feil passord!");
+    }
+  }
+  function renderLogin() {
+    return (
+      <div className='narrow center col'>
+        <img className="btn-img" src={IMG["Div"]} alt="snowflake" />
+        Rygg Gårds fryserinnhald :)
+        <div className={"add_hp"}></div>
+        Skriv passord for å kunne gjere endringer.<br/>
+        Hopp over om du bare vil kikke :)
+        <div className={"add_hp"}></div>
+        <div className={""}>
+          <StringInput
+            description={""}
+            type="password"
+            editVal={pwd}
+            errorMsg={pwdErr}
+            onChange={(newValue) => onPwdChange(newValue)}
+            onEnterDown={(e) => { e.preventDefault(); onLogin(true) }}
+          />
+        </div>
+        <div className={"add_hp"}></div>
+        <div className={"row mid add_hp"}>
+          OK:
+          <img className="btn-img" src={IMG["save"]} alt="snowflake" onClick={() => onLogin(true)} />
+        </div>
+        <div className={"add_hp"}></div>
+        <div className={"row mid add_hp"}>
+          Hopp over:
+          <img className="btn-img" src={IMG["save"]} alt="snowflake" onClick={() => onLogin(false)} />
+        </div>
+      </div>
+    );
   }
 
   function isFiltered(row) {
@@ -83,6 +145,7 @@ function App() {
   }
 
   function onClickRow(row_id) {
+    if (!mayEdit()) return;
     if (selected === row_id) setSelected(-1);
     else setSelected(row_id)
   }
@@ -157,14 +220,6 @@ function App() {
     return null;
   }
 
-  if (pageState === LOADING) {
-    return (
-      <div className="App">
-        <img className="App-logo" src={IMG["Div"]} alt="snowflake" />
-      </div>
-    );
-  }
-
   function renderBody() {
     if (addNew) {
       return (
@@ -185,6 +240,22 @@ function App() {
     return (renderRows());
   }
 
+  if (!hasLoggedIn) {
+    return (
+      <div className="narrow col center trans-mid">
+        {renderLogin()}
+      </div>
+    )
+  }
+
+  if (pageState === LOADING) {
+    return (
+      <div className="narrow col center trans-mid">
+        <img className="App-logo" src={IMG["Div"]} alt="snowflake" />
+      </div>
+    );
+  }
+
   return (
     <div className="narrow col center trans-mid">
       {renderErrorMsg()}
@@ -196,6 +267,7 @@ function App() {
         helg={spes === HELG}
         rask={spes === RASK}
         addNew={addNew}
+        mayEdit={mayEdit()}
         setAddNew={(x) => setAddNew(x)}
         onClickCat={(cat) => onClickCat(cat)}
         onClickBase={() => onClickSpes(BASE)}
