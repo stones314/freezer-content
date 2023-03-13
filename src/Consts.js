@@ -16,6 +16,27 @@ export const IMG = {
 
 }
 
+export const CATS = {
+    Fryser : [
+        "Kjøtt",
+        "Fisk",
+        "Grønnsaker og fries",
+        "Bær",
+        "Brødmat",
+        "Søtsaker",
+        "Div"
+    ],
+    Lager : [
+        "Kjøtt",
+        "Fisk",
+        "Grønnsaker og fries",
+        "Bær",
+        "Brødmat",
+        "Søtsaker",
+        "Div"
+    ]
+}
+
 export function isBase(cell) {
     if (!cell) return false;
     if (cell === "") return false;

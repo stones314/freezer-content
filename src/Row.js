@@ -103,7 +103,7 @@ export function Row(props) {
         for (const [i, c] of props.cats.entries()) {
             const sel = cat === c ? " sel" : "";
             catOpts.push(
-                <div className={"f1 brd" + sel} key={i} onClick={() => onClickCat(c)}>
+                <div className={"f1 cp brd" + sel} key={i} onClick={() => onClickCat(c)}>
                     <img className="icon" src={IMG[c]} alt={c} />
                 </div>
             );
@@ -123,10 +123,10 @@ export function Row(props) {
             const r_sel = spes[3] ? " sel" : "";
             return (
                 <div className="row f4">
-                    <div className={"f1 brd" + a_sel} onClick={() => onClickSpes(0)}><img className="icon" src={IMG["base"]} alt="base" /></div>
-                    <div className={"f1 brd" + b_sel} onClick={() => onClickSpes(1)}><img className="icon" src={IMG["bruk"]} alt="bruk" /></div>
-                    <div className={"f1 brd" + h_sel} onClick={() => onClickSpes(2)}><img className="icon" src={IMG["helg"]} alt="helg" /></div>
-                    <div className={"f1 brd" + r_sel} onClick={() => onClickSpes(3)}><img className="icon" src={IMG["rask"]} alt="rask" /></div>
+                    <div className={"f1 cp brd" + a_sel} onClick={() => onClickSpes(0)}><img className="icon" src={IMG["base"]} alt="base" /></div>
+                    <div className={"f1 cp brd" + b_sel} onClick={() => onClickSpes(1)}><img className="icon" src={IMG["bruk"]} alt="bruk" /></div>
+                    <div className={"f1 cp brd" + h_sel} onClick={() => onClickSpes(2)}><img className="icon" src={IMG["helg"]} alt="helg" /></div>
+                    <div className={"f1 cp brd" + r_sel} onClick={() => onClickSpes(3)}><img className="icon" src={IMG["rask"]} alt="rask" /></div>
                 </div>
             )
         }
@@ -142,21 +142,21 @@ export function Row(props) {
 
     function renderIcon(isSet, icon) {
         if (!isSet) return (<div className='f1'></div>);
-        return (<div className='f1'><img className="icon" src={IMG[icon]} alt={icon} /></div>);
+        return (<div className='f1 cp'><img className="icon" src={IMG[icon]} alt={icon} /></div>);
     }
 
     function renderBaseVal() {
         if (spes[0] > 0) {
             return (
                 <div className='mid row'>
-                    <div className='brd sqr'>
+                    <div className='mlr3 cp' onClick={() => onBaseMinus()}>
+                        <img className="icon" src={IMG["minus"]} alt="minus" />
+                    </div>
+                    <div className='brd sqr cp'>
                         {spes[0]}
                     </div>
-                    <div className='mlr3' onClick={() => onBasePluss()}>
+                    <div className='mlr3 cp' onClick={() => onBasePluss()}>
                         <img className="icon" src={IMG["pluss"]} alt="pluss" />
-                    </div>
-                    <div className='mlr3' onClick={() => onBaseMinus()}>
-                        <img className="icon" src={IMG["minus"]} alt="minus" />
                     </div>
                     <div className='mlr3'>
                         (Basisverdi)
@@ -185,7 +185,7 @@ export function Row(props) {
             );
         }
         return (
-            <div className="f1 txt-left" onClick={() => props.onSelect()}>
+            <div className="f1 cp txt-left" onClick={() => props.onSelect()}>
                 {val}
             </div>
         );
@@ -207,7 +207,7 @@ export function Row(props) {
             );
         }
         return (
-            <div className="f3 txt-left" onClick={() => props.onSelect()}>
+            <div className="f3 cp txt-left" onClick={() => props.onSelect()}>
                 {name}
             </div>
         );
@@ -216,7 +216,7 @@ export function Row(props) {
     function renderExitBtn() {
         return (
             <div className='f1 row'>
-                <div className="f1" onClick={() => props.onSelect()}>
+                <div className="f1 cp" onClick={() => props.onSelect()}>
                     X
                 </div>
             </div>
@@ -245,10 +245,10 @@ export function Row(props) {
                 <div className="mid row f1">
                     {renderCategories()}
                     <div className='f3 add_hp txt-right'></div>
+                    <div className="f1 cp" onClick={() => onMinusOne()}><img className="icon" src={IMG["minus"]} alt="minus" /></div>
                     {renderValue()}
-                    <div className="f1" onClick={() => onPlussOne()}><img className="icon" src={IMG["pluss"]} alt="pluss" /></div>
-                    <div className="f1" onClick={() => onMinusOne()}><img className="icon" src={IMG["minus"]} alt="minus" /></div>
-                    <div className="f1" onClick={() => props.onSave(name, val, cat, spes)}><img className="icon" src={IMG["save"]} alt="save" /></div>
+                    <div className="f1 cp" onClick={() => onPlussOne()}><img className="icon" src={IMG["pluss"]} alt="pluss" /></div>
+                    <div className="f1 cp" onClick={() => props.onSave(name, val, cat, spes)}><img className="icon" src={IMG["save"]} alt="save" /></div>
                 </div>
             </div>
 

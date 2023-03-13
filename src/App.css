@@ -211,3 +211,7 @@ form {
 .add_h {
   height: 15vh;
 }
+
+.cp {
+  cursor: pointer;
+}
