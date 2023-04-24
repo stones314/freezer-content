@@ -68,10 +68,10 @@ export class SheetApi {
      * 7	Helgemiddag
      */
     getRows() {
-        return this.rows[0];
+        return this.rows;
     }
 
-    async saveNewVal(row_id, name, val, cat, extra, onSaved) {
+    async updateFryserRow(row_id, name, val, cat, extra, onSaved) {
         const page_no = 0;
         this.rows[page_no][row_id].Navn = name;
         this.rows[page_no][row_id].Antall = val;
@@ -110,7 +110,7 @@ export class SheetApi {
      * 6	BrukeOpp
      * 7	Helgemiddag
      */
-    async addNewRow(navn, antall, cat, extra, onSaved) {
+    async addNewFryserRow(navn, antall, cat, extra, onSaved) {
         const page_no = 0;
         try {
             await this.sPages[page_no].addRow({
