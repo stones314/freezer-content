@@ -63,7 +63,9 @@ export function daysSince(date_string){
     if(date_string === "never") return -1;
     var dmy = date_string.split(" @ ")[0].split("/");
     const old_date = new Date(dmy[1] + "/" + dmy[0] + "/" + dmy[2]);
-    const ms_diff = Math.abs(new Date() - old_date);
+    dmy = getDateTime().split(" @ ")[0].split("/");
+    const new_date = new Date(dmy[1] + "/" + dmy[0] + "/" + dmy[2]);
+    const ms_diff = Math.abs(new_date - old_date);
     const day_diff = Math.ceil(ms_diff / MS_PER_DAY);
     return day_diff;
 }
