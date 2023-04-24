@@ -149,23 +149,36 @@ export function Row(props) {
         if (spes[0] > 0) {
             return (
                 <div className='mid row'>
-                    <div className='mlr3 cp' onClick={() => onBaseMinus()}>
+                    <div className='f1 cp' onClick={() => onBaseMinus()}>
                         <img className="icon" src={IMG["minus"]} alt="minus" />
                     </div>
-                    <div className='brd sqr cp'>
+                    <div className='f1 brd sqr cp'>
                         {spes[0]}
                     </div>
-                    <div className='mlr3 cp' onClick={() => onBasePluss()}>
+                    <div className='f1 cp' onClick={() => onBasePluss()}>
                         <img className="icon" src={IMG["pluss"]} alt="pluss" />
                     </div>
-                    <div className='mlr3'>
+                    <div className='f4'>
                         (Basisverdi)
+                    </div>
+                    <div className='f2'>
+
+                    </div>
+                    <div className='f7'>
+                        {props.row.Endringer}
                     </div>
                 </div>
             );
         }
         return (
-            null
+            <div className='mid row'>
+                <div className='f9'>
+
+                </div>
+                <div className='f7'>
+                    {props.row.Endringer}
+                </div>
+            </div>
         );
     }
 
