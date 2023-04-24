@@ -2,7 +2,9 @@ import { GoogleSpreadsheet } from "google-spreadsheet";
 import { isBase, getDateTime } from './Consts.js';
 
 
-const PAGE_NAME = "Fryser";
+const FRYS_PAGE_NAME = "Fryser";
+const LAGER_PAGE_NAME = "Lager";
+const PAGES = [FRYS_PAGE_NAME, LAGER_PAGE_NAME];
 export const COL_ID = {
     Kategori: 0,
     Navn: 1,
@@ -17,7 +19,7 @@ export const COL_ID = {
 export class SheetApi {
     constructor() {
         this.doc = new GoogleSpreadsheet(process.env.REACT_APP_SPREADSHEET_ID);
-        this.sPage = null;
+        this.sPages = [];
         this.rows = [];
     }
 
@@ -39,8 +41,10 @@ export class SheetApi {
             // loads document properties and worksheets
             await this.doc.loadInfo();
 
-            this.sPage = this.doc.sheetsByTitle[PAGE_NAME];
-            this.rows = await this.sPage.getRows();
+            for (const [i, page] of PAGES.entries()) {
+                this.sPages.push(this.doc.sheetsByTitle[page]);
+                this.rows.push(await this.sPages[i].getRows());
+            }
 
             onDataLoaded();
 
@@ -64,27 +68,28 @@ export class SheetApi {
      * 7	Helgemiddag
      */
     getRows() {
-        return this.rows;
+        return this.rows[0];
     }
 
     async saveNewVal(row_id, name, val, cat, extra, onSaved) {
-        this.rows[row_id].Navn = name;
-        this.rows[row_id].Antall = val;
-        this.rows[row_id].Kategori = cat;
-        this.rows[row_id].Endringer = getDateTime();
-        this.rows[row_id].Basisvare = Number(extra[0]) > 0 ? extra[0].toString() : "";
-        this.rows[row_id].BrukeOpp = extra[1] ? "x" : "";
-        this.rows[row_id].Helgemiddag = extra[2] ? "x" : "";
-        this.rows[row_id].Ferdigmiddag = extra[3] ? "x" : "";
+        const page_no = 0;
+        this.rows[page_no][row_id].Navn = name;
+        this.rows[page_no][row_id].Antall = val;
+        this.rows[page_no][row_id].Kategori = cat;
+        this.rows[page_no][row_id].Endringer = getDateTime();
+        this.rows[page_no][row_id].Basisvare = Number(extra[0]) > 0 ? extra[0].toString() : "";
+        this.rows[page_no][row_id].BrukeOpp = extra[1] ? "x" : "";
+        this.rows[page_no][row_id].Helgemiddag = extra[2] ? "x" : "";
+        this.rows[page_no][row_id].Ferdigmiddag = extra[3] ? "x" : "";
 
         try {
-            if (Number(this.rows[row_id].Antall) <= 0 && !isBase(this.rows[row_id].Basisvare)) {
-                await this.rows[row_id].delete();
-                this.rows = await this.sPage.getRows();
+            if (Number(this.rows[page_no][row_id].Antall) <= 0 && !isBase(this.rows[page_no][row_id].Basisvare)) {
+                await this.rows[page_no][row_id].delete();
+                this.rows[page_no] = await this.sPages[page_no].getRows();
                 onSaved("delete");
             }
             else {
-                await this.rows[row_id].save();
+                await this.rows[page_no][row_id].save();
                 onSaved("save");
             }
         }
@@ -106,8 +111,9 @@ export class SheetApi {
      * 7	Helgemiddag
      */
     async addNewRow(navn, antall, cat, extra, onSaved) {
+        const page_no = 0;
         try {
-            await this.sPage.addRow({
+            await this.sPages[page_no].addRow({
                 Kategori: cat,
                 Navn: navn,
                 Antall: antall,
@@ -117,7 +123,7 @@ export class SheetApi {
                 BrukeOpp: extra[1] ? "x" : "",
                 Helgemiddag: extra[2] ? "x" : ""
             });
-            this.rows = await this.sPage.getRows();
+            this.rows[page_no] = await this.sPages[page_no].getRows();
             onSaved("");
         }
         catch (e) {
