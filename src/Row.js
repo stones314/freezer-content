@@ -161,10 +161,10 @@ export function Row(props) {
                     <div className='f4'>
                         (Basisverdi)
                     </div>
-                    <div className='f2'>
+                    <div className='f1'>
 
                     </div>
-                    <div className='f7'>
+                    <div className='f8 txt-right'>
                         {props.row.Endringer}
                     </div>
                 </div>
@@ -172,10 +172,10 @@ export function Row(props) {
         }
         return (
             <div className='mid row'>
-                <div className='f9'>
+                <div className='f8'>
 
                 </div>
-                <div className='f7'>
+                <div className='f8 txt-right'>
                     {props.row.Endringer}
                 </div>
             </div>
