@@ -1,4 +1,4 @@
-import { IMG, isBase } from './Consts.js';
+import { IMG, isBase, daysSince } from './Consts.js';
 import { useState } from "react";
 import StringInput from './StringInput.jsx';
 
@@ -146,6 +146,8 @@ export function Row(props) {
     }
 
     function renderBaseVal() {
+        const days_since_edit = daysSince(props.row.Endringer);
+        const edit_text = days_since_edit === -1 ? "Aldri endret" : "Endret " + days_since_edit + " dager siden";
         if (spes[0] > 0) {
             return (
                 <div className='mid row'>
@@ -165,7 +167,7 @@ export function Row(props) {
 
                     </div>
                     <div className='f8 txt-right'>
-                        {props.row.Endringer}
+                        {edit_text}
                     </div>
                 </div>
             );
@@ -176,7 +178,7 @@ export function Row(props) {
 
                 </div>
                 <div className='f8 txt-right'>
-                    {props.row.Endringer}
+                    {edit_text}
                 </div>
             </div>
         );

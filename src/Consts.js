@@ -56,3 +56,14 @@ export function getDateTime() {
         + minutes + ":"
         + seconds;
 }
+
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+export function daysSince(date_string){
+    if(date_string === "never") return -1;
+    var dmy = date_string.split(" @ ")[0].split("/");
+    const old_date = new Date(dmy[1] + "/" + dmy[0] + "/" + dmy[2]);
+    const ms_diff = Math.abs(new Date() - old_date);
+    const day_diff = Math.ceil(ms_diff / MS_PER_DAY);
+    return day_diff;
+}
