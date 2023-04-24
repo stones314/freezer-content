@@ -8,7 +8,7 @@ export function Filter(props) {
         const bgcol = props.addNew ? " buy" : " sel";
         const sign = props.addNew ? "minus" : "pluss"
         return (
-          <div className="f1 brd" onClick={() => props.setAddNew(!props.addNew)}>
+          <div className="f1 cp brd" onClick={() => props.setAddNew(!props.addNew)}>
             <img className={"btn-img" + bgcol} src={IMG[sign]} alt={sign} />
           </div>
         );
@@ -19,7 +19,7 @@ export function Filter(props) {
         for (const [i, c] of props.categories.entries()) {
             const sel = props.kat === c ? " sel" : "";
             catOpts.push(
-                <div className={"f1 brd" + sel} key={i} onClick={() => props.onClickCat(c)}>
+                <div className={"f1 cp brd" + sel} key={i} onClick={() => props.onClickCat(c)}>
                     <img className="btn-img" src={IMG[c]} alt={c} />
                 </div>
             );
@@ -38,10 +38,10 @@ export function Filter(props) {
         const r_sel = props.rask ? " sel" : "";
         return (
             <div className="row mid">
-                <div className={"f1 brd" + a_sel} onClick={() => props.onClickBase()}><img className="btn-img" src={IMG["base"]} alt="base" /></div>
-                <div className={"f1 brd" + b_sel} onClick={() => props.onClickBruk()}><img className="btn-img" src={IMG["bruk"]} alt="bruk" /></div>
-                <div className={"f1 brd" + h_sel} onClick={() => props.onClickHelg()}><img className="btn-img" src={IMG["helg"]} alt="helg" /></div>
-                <div className={"f1 brd" + r_sel} onClick={() => props.onClickRask()}><img className="btn-img" src={IMG["rask"]} alt="rask" /></div>
+                <div className={"f1 cp brd" + a_sel} onClick={() => props.onClickBase()}><img className="btn-img" src={IMG["base"]} alt="base" /></div>
+                <div className={"f1 cp brd" + b_sel} onClick={() => props.onClickBruk()}><img className="btn-img" src={IMG["bruk"]} alt="bruk" /></div>
+                <div className={"f1 cp brd" + h_sel} onClick={() => props.onClickHelg()}><img className="btn-img" src={IMG["helg"]} alt="helg" /></div>
+                <div className={"f1 cp brd" + r_sel} onClick={() => props.onClickRask()}><img className="btn-img" src={IMG["rask"]} alt="rask" /></div>
                 {renderAddRowBtn()}
             </div>
         )
