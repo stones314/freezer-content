@@ -9,7 +9,7 @@ import './App.css';
 
 export function Row(props) {
 
-    const [val, setVal] = useState(Number(props.row.Antall));
+    const [val, setVal] = useState(props.row.Antall.toString());
     const [name, setName] = useState(props.row.Navn);
     const [edited, setEdited] = useState(false);
     const [cat, setCat] = useState(props.row.Kategori);
@@ -35,12 +35,8 @@ export function Row(props) {
     }
 
     function onValChange(newValue) {
-        var v = Number(newValue);
-        if (v < 0) {
-            return;
-        }
         setEdited(true);
-        setVal(v);
+        setVal(newValue);
     }
 
     function onClickCat(c) {
@@ -191,7 +187,7 @@ export function Row(props) {
                     <StringInput
                         description={""}
                         type="number"
-                        editVal={val}
+                        editVal={val.toString()}
                         errorMsg={nErr}
                         onChange={(newValue) => onValChange(newValue)}
                         onEnterDown={(e) => { e.preventDefault(); props.onSave(name, val, cat, spes) }}
