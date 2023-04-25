@@ -99,6 +99,24 @@ export class SheetApi {
         }
     }
 
+    async updateLagerRow(row_id, name, val, cat, basis, onSaved) {
+        const page_no = 1;
+        this.rows[page_no][row_id].Navn = name;
+        this.rows[page_no][row_id].Antall = val;
+        this.rows[page_no][row_id].Kategori = cat;
+        this.rows[page_no][row_id].Endringer = getDateTime();
+        this.rows[page_no][row_id].Basisvare = basis.toString();
+
+        try {
+            await this.rows[page_no][row_id].save();
+            onSaved("save");
+        }
+        catch (e) {
+            console.error("Error: ", e);
+            onSaved(e);
+        }
+    }
+
     /**
      * Collumns:
      * 0    Kategori
@@ -122,6 +140,25 @@ export class SheetApi {
                 Ferdigmiddag: extra[3] ? "x" : "",
                 BrukeOpp: extra[1] ? "x" : "",
                 Helgemiddag: extra[2] ? "x" : ""
+            });
+            this.rows[page_no] = await this.sPages[page_no].getRows();
+            onSaved("");
+        }
+        catch (e) {
+            console.error("Error: ", e);
+            onSaved(e);
+        }
+    }
+
+    async addNewLagerRow(navn, antall, cat, basis, onSaved) {
+        const page_no = 1;
+        try {
+            await this.sPages[page_no].addRow({
+                Kategori: cat,
+                Navn: navn,
+                Antall: antall,
+                Endringer: getDateTime(),
+                Basisvare: basis.toString(),
             });
             this.rows[page_no] = await this.sPages[page_no].getRows();
             onSaved("");

@@ -3,6 +3,7 @@ import { SheetApi } from './SheetApiClass.js'
 import { IMG } from './Consts.js';
 import StringInput from './StringInput.jsx';
 import Fryser from './FryserMain.js';
+import Lager from './Lager/LagerMain.js';
 import Cookies from "universal-cookie";
 import './App.css';
 
@@ -13,6 +14,7 @@ const SAVING = 2;
 function App() {
   const cookies = new Cookies();
   const [pageState, setPageState] = useState(LOADING);
+  const [pageNo, setPageNo] = useState(0);
   const [pwd, setPwd] = useState(cookies.get("lastPwd") ? cookies.get("lastPwd") : "");
   const [pwdErr, setPwdErr] = useState("");
   const [hasLoggedIn, setHasLoggedIn] = useState(mayEdit());
@@ -88,38 +90,55 @@ function App() {
     );
   }
 
+  function checkUpdateOK(msg, row_id) {
+    if (msg === "save") {
+      onDataLoaded();
+      setErrMsg("");
+    }
+    else if (msg === "delete") {
+      onDataLoaded();
+      setErrMsg("");
+    }
+    else {
+      sheetApi.current.setNewVal("Antall", row_id, rows[pageNo][row_id].Antall);
+      setRows(rows);
+      setErrMsg(msg);
+    }
+    setPageState(READY);
+  }
+
   function onUpdateRowFrys(row_id, name, value, cat, extra) {
     setPageState(SAVING);
-    sheetApi.current.updateFryserRow(row_id, name, value, cat, extra, (msg) => {
-      if (msg === "save") {
-        onDataLoaded();
-        setErrMsg("");
-      }
-      else if (msg === "delete") {
-        onDataLoaded();
-        setErrMsg("");
-      }
-      else {
-        sheetApi.current.setNewVal("Antall", row_id, rows[row_id].Antall);
-        setRows(rows);
-        setErrMsg(msg);
-      }
-      setPageState(READY);
-    });
+    sheetApi.current.updateFryserRow(row_id, name, value, cat, extra, (msg) => checkUpdateOK(msg, row_id));
+  }
+  function onUpdateRowLager(row_id, name, value, cat, basis) {
+    setPageState(SAVING);
+    sheetApi.current.updateLagerRow(row_id, name, value, cat, basis, (msg) => checkUpdateOK(msg, row_id));
+  }
+
+  function checkNewOK(err) {
+    if (err !== "") {
+      //error at add row...
+    }
+    else {
+      onDataLoaded();
+    }
+    setErrMsg(err);
+    setPageState(READY);
   }
 
   function onNewRowFrys(navn, antall, cat, extra) {
     setPageState(SAVING);
-    sheetApi.current.addNewFryserRow(navn, antall, cat, extra, (err) => {
-      if (err !== "") {
-        //error at add row...
-      }
-      else {
-        onDataLoaded();
-      }
-      setErrMsg(err);
-      setPageState(READY);
-    });
+    sheetApi.current.addNewFryserRow(navn, antall, cat, extra, (err) => checkNewOK(err));
+  }
+
+  function onNewRowLager(navn, antall, cat, basis) {
+    setPageState(SAVING);
+    sheetApi.current.addNewLagerRow(navn, antall, cat, basis, (err) => checkNewOK(err));
+  }
+
+  function onPageSelect(id) {
+    setPageNo(id);
   }
 
   function renderErrorMsg() {
@@ -127,6 +146,21 @@ function App() {
       return (<div>{errMsg}</div>);
     }
     return null;
+  }
+
+  function renderPageSelect() {
+    const sel_f = pageNo === 0 ? " sel" : "";
+    const sel_l = pageNo === 1 ? " sel" : "";
+    return (
+      <div className="narrow row center">
+        <div className={"f1 cp brd"+sel_f} onClick={() => onPageSelect(0)}>
+          <b>Frys</b>
+        </div>
+        <div className={"f1 cp brd"+sel_l} onClick={() => onPageSelect(1)}>
+          <b>Lager</b>
+        </div>
+      </div>
+    );
   }
 
   function renderBody() {
@@ -138,12 +172,21 @@ function App() {
         </div>
       );
     }
-    return (<Fryser
-        rows={rows[0]}
+    if (pageNo === 1) {
+      return (<Lager
+        rows={rows[1]}
         mayEdit={mayEdit()}
-        onNewRowFrys={(n, a, c, e) => onNewRowFrys(n, a, c, e)}
-        onUpdateRowFrys={(i, n, v, c, e) => onUpdateRowFrys(i, n, v, c, e)}
+        onNewRowLager={(n, a, c, b) => onNewRowLager(n, a, c, b)}
+        onUpdateRowLager={(i, n, v, c, b) => onUpdateRowLager(i, n, v, c, b)}
       />
+      );
+    }
+    return (<Fryser
+      rows={rows[0]}
+      mayEdit={mayEdit()}
+      onNewRowFrys={(n, a, c, e) => onNewRowFrys(n, a, c, e)}
+      onUpdateRowFrys={(i, n, v, c, e) => onUpdateRowFrys(i, n, v, c, e)}
+    />
     );
   }
 
@@ -166,6 +209,7 @@ function App() {
   return (
     <div className="narrow col center trans-mid">
       {renderErrorMsg()}
+      {renderPageSelect()}
       {renderBody()}
     </div>
   );

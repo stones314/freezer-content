@@ -6,6 +6,10 @@ export const IMG = {
     "Brødmat": "https://rygg-gaard.no/frys/img/bread.png",
     "Søtsaker": "https://rygg-gaard.no/frys/img/dessert.png",
     "Div": "https://rygg-gaard.no/frys/img/snowflake.png",
+    "Bakevarer": "https://rygg-gaard.no/frys/img/mel.png",
+    "Hermetikk": "https://rygg-gaard.no/frys/img/hermetikk.png",
+    "PastaRis": "https://rygg-gaard.no/frys/img/pasta.png",
+    "Turmat": "https://rygg-gaard.no/frys/img/tur.png",
     "base": "https://rygg-gaard.no/frys/img/cart.png",
     "bruk": "https://rygg-gaard.no/frys/img/expired.png",
     "helg": "https://rygg-gaard.no/frys/img/tie.png",
@@ -14,27 +18,6 @@ export const IMG = {
     "minus": "https://rygg-gaard.no/quiz/img/MinusBtn.png",
     "save": "https://rygg-gaard.no/frys/img/ok.png",
 
-}
-
-export const CATS = {
-    Fryser : [
-        "Kjøtt",
-        "Fisk",
-        "Grønnsaker og fries",
-        "Bær",
-        "Brødmat",
-        "Søtsaker",
-        "Div"
-    ],
-    Lager : [
-        "Kjøtt",
-        "Fisk",
-        "Grønnsaker og fries",
-        "Bær",
-        "Brødmat",
-        "Søtsaker",
-        "Div"
-    ]
 }
 
 export function isBase(cell) {

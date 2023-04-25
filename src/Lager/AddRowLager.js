@@ -1,16 +1,16 @@
-import { IMG } from './Consts.js';
+import { IMG } from './../Consts.js';
 import { useState } from "react";
-import StringInput from './StringInput.jsx';
-import './App.css';
+import StringInput from './../StringInput.jsx';
+import './../App.css';
 
-export function AddRow(props) {
+export function AddRowLager(props) {
 
     const [val, setVal] = useState("1");
     const [navn, setNavn] = useState("");
     const [cat, setCat] = useState(props.cats[0]);
     const [nErr, setNerr] = useState("");
     const [vErr, setVerr] = useState("");
-    const [spes, setSpes] = useState([0, false, false, false]);
+    const [basis, setBasis] = useState(1);
 
     function onValChange(newValue) {
         setVal(newValue);
@@ -24,23 +24,13 @@ export function AddRow(props) {
     }
 
     function onBasePluss() {
-        if (spes[0] >= 9) return;
-        setSpes([
-            Number(spes[0]) + 1,
-            spes[1],
-            spes[2],
-            spes[3]
-        ]);
+        if (basis >= 9) return;
+        setBasis(Number(basis) + 1);
     }
 
     function onBaseMinus() {
-        if (spes[0] <= 0) return;
-        setSpes([
-            Number(spes[0]) - 1,
-            spes[1],
-            spes[2],
-            spes[3]
-        ]);
+        if (basis <= 0) return;
+        setBasis(Number(basis) - 1);
     }
 
     function renderCategories() {
@@ -70,58 +60,30 @@ export function AddRow(props) {
     }
 
     function renderBaseVal() {
-        if (spes[0] > 0) {
-            return (
-                <div className='mid row mtb2'>
-                    <div className='mlr3' onClick={() => onBaseMinus()}>
-                        <img className="icon" src={IMG["minus"]} alt="minus" />
-                    </div>
-                    <div className='brd sqr'>
-                        {spes[0]}
-                    </div>
-                    <div className='mlr3' onClick={() => onBasePluss()}>
-                        <img className="icon" src={IMG["pluss"]} alt="pluss" />
-                    </div>
-                </div>
-            );
-        }
         return (
-            null
+            <div className='mid row mtb2'>
+                <div className='mlr3' onClick={() => onBaseMinus()}>
+                    <img className="icon" src={IMG["minus"]} alt="minus" />
+                </div>
+                <div className='brd sqr'>
+                    {basis}
+                </div>
+                <div className='mlr3' onClick={() => onBasePluss()}>
+                    <img className="icon" src={IMG["pluss"]} alt="pluss" />
+                </div>
+            </div>
         );
     }
 
-    function renderSpecial() {
-        const a_sel = spes[0] > 0 ? " sel" : "";
-        const b_sel = spes[1] ? " sel" : "";
-        const h_sel = spes[2] ? " sel" : "";
-        const r_sel = spes[3] ? " sel" : "";
+    function renderBasis() {
         return (
             <div className='center'>
                 <div>
-                    Ekstra info
-                </div>
-                <div className="row">
-                    <div className={"f1 brd" + a_sel} onClick={() => onClickSpes(0)}><img className="btn-img" src={IMG["base"]} alt="base" /></div>
-                    <div className={"f1 brd" + b_sel} onClick={() => onClickSpes(1)}><img className="btn-img" src={IMG["bruk"]} alt="bruk" /></div>
-                    <div className={"f1 brd" + h_sel} onClick={() => onClickSpes(2)}><img className="btn-img" src={IMG["helg"]} alt="helg" /></div>
-                    <div className={"f1 brd" + r_sel} onClick={() => onClickSpes(3)}><img className="btn-img" src={IMG["rask"]} alt="rask" /></div>
+                    Basis
                 </div>
                 {renderBaseVal()}
             </div>
         )
-    }
-
-    function onClickSpes(s) {
-        var newSpes = [];
-        for (const [i, x] of spes.entries()) newSpes[i] = x;
-        if (s === 0) {
-            if (Number(newSpes[s]) === 0) newSpes[s] = 1;
-            else newSpes[s] = 0;
-        }
-        else {
-            newSpes[s] = !newSpes[s];
-        }
-        setSpes(newSpes);
     }
 
     function onSave() {
@@ -139,7 +101,7 @@ export function AddRow(props) {
             return;
         }
         setVerr("");
-        props.onSave(navn, val, cat, spes);
+        props.onSave(navn, val, cat, basis);
     }
 
     return (
@@ -162,7 +124,7 @@ export function AddRow(props) {
                 onEnterDown={(e) => { e.preventDefault(); onSave() }}
             />
             {renderCategories()}
-            {renderSpecial()}
+            {renderBasis()}
             Lagre
             <div className="f1" onClick={() => onSave()}>
                 <img className="btn-img" src={IMG["save"]} alt="save" />
