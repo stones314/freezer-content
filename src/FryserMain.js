@@ -23,16 +23,14 @@ const cats = [
 
 function Fryser(props) {
   const [selected, setSelected] = useState(-1);
-  const [filterKat, setFilterKat] = useState("");
-  const [spes, setSpes] = useState(NO_SPES);
   const [addNew, setAddNew] = useState(false);
 
   function isFiltered(row) {
-    if (filterKat !== "" && row.Kategori !== filterKat) return true;//eliminated by category filter!
-    if (spes === BASE && !isBase(row.Basisvare)) return true;//eliminated by Basisvare filter
-    if (spes === BRUK && row.BrukeOpp !== "x") return true;//eliminated by BrukOpp filter
-    if (spes === RASK && row.Ferdigmiddag !== "x") return true;//eliminated by Ferdigmiddag filter
-    if (spes === HELG && row.Helgemiddag !== "x") return true;//eliminated by Helgemiddag filter
+    if (props.catSel !== "" && row.Kategori !== props.catSel) return true;//eliminated by category filter!
+    if (props.spesSel === BASE && !isBase(row.Basisvare)) return true;//eliminated by Basisvare filter
+    if (props.spesSel === BRUK && row.BrukeOpp !== "x") return true;//eliminated by BrukOpp filter
+    if (props.spesSel === RASK && row.Ferdigmiddag !== "x") return true;//eliminated by Ferdigmiddag filter
+    if (props.spesSel === HELG && row.Helgemiddag !== "x") return true;//eliminated by Helgemiddag filter
     return false;
   }
 
@@ -74,12 +72,7 @@ function Fryser(props) {
       setAddNew(false);
       return;
     }
-    if (filterKat === cat) {
-      setFilterKat("");
-    }
-    else {
-      setFilterKat(cat);
-    }
+    props.onCatSel(cat);
   }
 
   function onClickSpes(s) {
@@ -87,12 +80,7 @@ function Fryser(props) {
       setAddNew(false);
       return;
     }
-    if (spes === s) {
-      setSpes(NO_SPES);
-    }
-    else {
-      setSpes(s);
-    }
+    props.onSpesSel(s);
   }
 
   function onSave(row_id, name, value, cat, extra) {
@@ -121,12 +109,12 @@ function Fryser(props) {
   return (
     <div className="narrow col center trans-mid">
       <Filter
-        kat={filterKat}
+        kat={props.catSel}
         categories={cats}
-        base={spes === BASE}
-        bruk={spes === BRUK}
-        helg={spes === HELG}
-        rask={spes === RASK}
+        base={props.spesSel === BASE}
+        bruk={props.spesSel === BRUK}
+        helg={props.spesSel === HELG}
+        rask={props.spesSel === RASK}
         addNew={addNew}
         mayEdit={props.mayEdit}
         setAddNew={(x) => setAddNew(x)}

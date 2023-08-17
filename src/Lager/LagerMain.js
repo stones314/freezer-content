@@ -13,11 +13,10 @@ const cats = [
 
 function Lager(props) {
   const [selected, setSelected] = useState(-1);
-  const [filterKat, setFilterKat] = useState("");
   const [addNew, setAddNew] = useState(false);
 
   function isFiltered(row) {
-    if (filterKat !== "" && row.Kategori !== filterKat) return true;//eliminated by category filter!
+    if (props.catSel !== "" && row.Kategori !== props.catSel) return true;//eliminated by category filter!
     return false;
   }
 
@@ -59,12 +58,7 @@ function Lager(props) {
       setAddNew(false);
       return;
     }
-    if (filterKat === cat) {
-      setFilterKat("");
-    }
-    else {
-      setFilterKat(cat);
-    }
+    props.onCatSel(cat);
   }
 
   function onSave(row_id, name, value, cat, basis) {
@@ -93,7 +87,7 @@ function Lager(props) {
   return (
     <div className="narrow col center trans-mid">
       <FilterLager
-        kat={filterKat}
+        kat={props.catSel}
         categories={cats}
         addNew={addNew}
         mayEdit={props.mayEdit}

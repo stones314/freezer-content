@@ -20,6 +20,8 @@ function App() {
   const [hasLoggedIn, setHasLoggedIn] = useState(mayEdit());
   const [errMsg, setErrMsg] = useState("");
   const [rows, setRows] = useState([]);
+  const [catSel, setCatSel] = useState("");
+  const [spesSel, setSpesSel] = useState(0);
   const sheetApi = useRef(null);
 
   useEffect(() => {
@@ -139,6 +141,26 @@ function App() {
 
   function onPageSelect(id) {
     setPageNo(id);
+    setCatSel("");
+    setSpesSel(0);
+  }
+
+  function onCatSel(cat){
+    if (catSel === cat) {
+      setCatSel("");
+    }
+    else {
+      setCatSel(cat);
+    }
+  }
+
+  function onSpesSel(s) {
+    if (spesSel === s) {
+      setSpesSel(0);
+    }
+    else {
+      setSpesSel(s);
+    }
   }
 
   function renderErrorMsg() {
@@ -178,6 +200,8 @@ function App() {
         mayEdit={mayEdit()}
         onNewRowLager={(n, a, c, b) => onNewRowLager(n, a, c, b)}
         onUpdateRowLager={(i, n, v, c, b) => onUpdateRowLager(i, n, v, c, b)}
+        catSel={catSel}
+        onCatSel={(cat) => onCatSel(cat)}
       />
       );
     }
@@ -186,7 +210,11 @@ function App() {
       mayEdit={mayEdit()}
       onNewRowFrys={(n, a, c, e) => onNewRowFrys(n, a, c, e)}
       onUpdateRowFrys={(i, n, v, c, e) => onUpdateRowFrys(i, n, v, c, e)}
-    />
+      catSel={catSel}
+      onCatSel={(cat) => onCatSel(cat)}
+      spesSel={spesSel}
+      onSpesSel={(s) => onSpesSel(s)}
+      />
     );
   }
 
