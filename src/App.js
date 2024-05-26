@@ -15,7 +15,8 @@ function App() {
   const cookies = new Cookies();
   const [pageState, setPageState] = useState(LOADING);
   const [pageNo, setPageNo] = useState(0);
-  const [pwd, setPwd] = useState(cookies.get("lastPwd") ? cookies.get("lastPwd") : "");
+  //const [pwd, setPwd] = useState(cookies.get("lastPwd") ? cookies.get("lastPwd") : "");
+  const [pwd, setPwd] = useState(process.env.REACT_APP_EDIT_PWD);
   const [pwdErr, setPwdErr] = useState("");
   const [hasLoggedIn, setHasLoggedIn] = useState(mayEdit());
   const [errMsg, setErrMsg] = useState("");
